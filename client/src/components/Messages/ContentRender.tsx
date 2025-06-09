@@ -17,6 +17,7 @@ type ContentRenderProps = {
   isCard?: boolean;
   isMultiMessage?: boolean;
   isSubmittingFamily?: boolean;
+  bgcolor?: string;
 } & Pick<
   TMessageProps,
   'currentEditId' | 'setCurrentEditId' | 'siblingIdx' | 'setSiblingIdx' | 'siblingCount'
@@ -33,6 +34,7 @@ const ContentRender = memo(
     isMultiMessage = false,
     setCurrentEditId,
     isSubmittingFamily = false,
+    bgcolor,
   }: ContentRenderProps) => {
     const { attachments, searchResults } = useAttachments({
       messageId: msg?.messageId,
@@ -126,6 +128,7 @@ const ContentRender = memo(
       <div
         id={msg.messageId}
         aria-label={`message-${msg.depth}-${msg.messageId}`}
+        style={{ backgroundColor: bgcolor }}
         className={cn(
           baseClasses.common,
           isCard ? baseClasses.card : baseClasses.chat,
@@ -161,49 +164,54 @@ const ContentRender = memo(
         >
           <h2 className={cn('select-none font-semibold', fontSize)}>{messageLabel}</h2>
 
-          <div className="flex flex-col gap-1">
-            <div className="flex max-w-full flex-grow flex-col gap-0">
-              <ContentParts
-                edit={edit}
-                isLast={isLast}
-                enterEdit={enterEdit}
-                siblingIdx={siblingIdx}
-                messageId={msg.messageId}
-                attachments={attachments}
-                isSubmitting={isSubmitting}
-                searchResults={searchResults}
-                setSiblingIdx={setSiblingIdx}
-                isCreatedByUser={msg.isCreatedByUser}
-                conversationId={conversation?.conversationId}
-                content={msg.content as Array<TMessageContentParts | undefined>}
-              />
+          <div className="flex flex-col gap-1 thought-workbench">
+            <div className="animatedThinking">
+              <div>Thinking...</div>
             </div>
-
-            {(isSubmittingFamily || isSubmitting) && !(msg.children?.length ?? 0) ? (
-              <PlaceholderRow isCard={isCard} />
-            ) : (
-              <SubRow classes="text-xs">
-                <SiblingSwitch
-                  siblingIdx={siblingIdx}
-                  siblingCount={siblingCount}
-                  setSiblingIdx={setSiblingIdx}
-                />
-                <HoverButtons
-                  index={index}
-                  isEditing={edit}
-                  message={msg}
-                  enterEdit={enterEdit}
-                  isSubmitting={isSubmitting}
-                  conversation={conversation ?? null}
-                  regenerate={handleRegenerateMessage}
-                  copyToClipboard={copyToClipboard}
-                  handleContinue={handleContinue}
-                  latestMessage={latestMessage}
-                  handleFeedback={handleFeedback}
+            <div>
+              <div className="flex max-w-full flex-grow flex-col gap-0 thought-workbench-content">
+                <ContentParts
+                  edit={edit}
                   isLast={isLast}
+                  enterEdit={enterEdit}
+                  siblingIdx={siblingIdx}
+                  messageId={msg.messageId}
+                  attachments={attachments}
+                  isSubmitting={isSubmitting}
+                  searchResults={searchResults}
+                  setSiblingIdx={setSiblingIdx}
+                  isCreatedByUser={msg.isCreatedByUser}
+                  conversationId={conversation?.conversationId}
+                  content={msg.content as Array<TMessageContentParts | undefined>}
                 />
-              </SubRow>
-            )}
+              </div>
+
+              {(isSubmittingFamily || isSubmitting) && !(msg.children?.length ?? 0) ? (
+                <PlaceholderRow isCard={isCard} />
+              ) : (
+                <SubRow classes="text-xs">
+                  <SiblingSwitch
+                    siblingIdx={siblingIdx}
+                    siblingCount={siblingCount}
+                    setSiblingIdx={setSiblingIdx}
+                  />
+                  <HoverButtons
+                    index={index}
+                    isEditing={edit}
+                    message={msg}
+                    enterEdit={enterEdit}
+                    isSubmitting={isSubmitting}
+                    conversation={conversation ?? null}
+                    regenerate={handleRegenerateMessage}
+                    copyToClipboard={copyToClipboard}
+                    handleContinue={handleContinue}
+                    latestMessage={latestMessage}
+                    handleFeedback={handleFeedback}
+                    isLast={isLast}
+                  />
+                </SubRow>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -9,7 +9,9 @@ services:
     depends_on:
       - mongodb
       - rag_api
-    image: ghcr.io/danny-avila/librechat-dev:latest
+    build:  # Use build instead of image
+      context: .  # Path to the directory containing your Dockerfile
+      dockerfile: Dockerfile  # Specify the Dockerfile if it's not named Dockerfile
     restart: always
     user: "${UID}:${GID}"
     extra_hosts:

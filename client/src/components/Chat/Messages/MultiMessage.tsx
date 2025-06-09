@@ -17,7 +17,8 @@ export default function MultiMessage({
   messagesTree,
   currentEditId,
   setCurrentEditId,
-}: TMessageProps) {
+  bgcolor,
+}: TMessageProps & { bgcolor?: string }) {
   const [siblingIdx, setSiblingIdx] = useRecoilState(store.messagesSiblingIdxFamily(messageId));
 
   const setSiblingIdxRev = useCallback(
@@ -50,39 +51,45 @@ export default function MultiMessage({
 
   if (isAssistantsEndpoint(message.endpoint) && message.content) {
     return (
-      <MessageParts
-        key={message.messageId}
-        message={message}
-        currentEditId={currentEditId}
-        setCurrentEditId={setCurrentEditId}
-        siblingIdx={messagesTree.length - siblingIdx - 1}
-        siblingCount={messagesTree.length}
-        setSiblingIdx={setSiblingIdxRev}
-      />
+      <div style={bgcolor ? { backgroundColor: bgcolor } : undefined}>
+        <MessageParts
+          key={message.messageId}
+          message={message}
+          currentEditId={currentEditId}
+          setCurrentEditId={setCurrentEditId}
+          siblingIdx={messagesTree.length - siblingIdx - 1}
+          siblingCount={messagesTree.length}
+          setSiblingIdx={setSiblingIdxRev}
+        />
+      </div>
     );
   } else if (message.content) {
     return (
-      <MessageContent
-        key={message.messageId}
-        message={message}
-        currentEditId={currentEditId}
-        setCurrentEditId={setCurrentEditId}
-        siblingIdx={messagesTree.length - siblingIdx - 1}
-        siblingCount={messagesTree.length}
-        setSiblingIdx={setSiblingIdxRev}
-      />
+      <div style={bgcolor ? { backgroundColor: bgcolor } : undefined}>
+        <MessageContent
+          key={message.messageId}
+          message={message}
+          currentEditId={currentEditId}
+          setCurrentEditId={setCurrentEditId}
+          siblingIdx={messagesTree.length - siblingIdx - 1}
+          siblingCount={messagesTree.length}
+          setSiblingIdx={setSiblingIdxRev}
+        />
+      </div>
     );
   }
 
   return (
-    <Message
-      key={message.messageId}
-      message={message}
-      currentEditId={currentEditId}
-      setCurrentEditId={setCurrentEditId}
-      siblingIdx={messagesTree.length - siblingIdx - 1}
-      siblingCount={messagesTree.length}
-      setSiblingIdx={setSiblingIdxRev}
-    />
+    <div style={bgcolor ? { backgroundColor: bgcolor } : undefined}>
+      <Message
+        key={message.messageId}
+        message={message}
+        currentEditId={currentEditId}
+        setCurrentEditId={setCurrentEditId}
+        siblingIdx={messagesTree.length - siblingIdx - 1}
+        siblingCount={messagesTree.length}
+        setSiblingIdx={setSiblingIdxRev}
+      />
+    </div>
   );
 }
